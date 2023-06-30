@@ -1,0 +1,28 @@
+// React-Icons //
+import { FaSpinner } from "react-icons/fa";
+
+const [isLoading, setIsLoading] = useState<boolean>(true);
+
+// at end of useEffect 
+setIsLoading(false);
+
+<div className="h-80 flex justify-center items-center">
+    <FaSpinner
+    style={{
+        fontSize: "2rem",
+        animation: "spin 1.5s linear infinite",
+    }}
+    />
+    <style>
+    {`
+    @keyframes spin {
+    0% {
+    transform: rotate(0deg);
+    }
+    100% {
+    transform: rotate(360deg);
+    }
+}
+`}
+    </style>
+</div>
