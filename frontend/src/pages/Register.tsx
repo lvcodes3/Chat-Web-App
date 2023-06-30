@@ -1,7 +1,10 @@
 // Dependencies //
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios, { AxiosError } from "axios";
+// Context //
+import { AuthContext } from "../helpers/AuthContext";
 
 interface FormDataTypes {
   username: string;
@@ -11,15 +14,9 @@ interface FormDataTypes {
   picture: string;
 }
 
-interface FormErrorTypes {
-  usernameError: string;
-  emailError: string;
-  passwordError: string;
-  passwordConfirmationError: string;
-  pictureError: string;
-}
-
 const Register = () => {
+  const { setUser } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormDataTypes>({
@@ -28,14 +25,6 @@ const Register = () => {
     password: "",
     passwordConfirmation: "",
     picture: "",
-  });
-  const [registerError, setRegisterError] = useState<string>("");
-  const [formError, setFormError] = useState<FormErrorTypes>({
-    usernameError: "",
-    emailError: "",
-    passwordError: "",
-    passwordConfirmationError: "",
-    pictureError: "",
   });
   const [avatarLinks, setAvatarLinks] = useState<string[]>([]);
   const [selectedAvatarIdx, setSelectedAvatarIdx] = useState<
@@ -66,105 +55,45 @@ const Register = () => {
   };
 
   const validateFormData = () => {
-    let errorCount = 0;
+    let errorCount: number = 0;
 
     // username //
     if (formData.username.length < 3 || formData.username.length > 15) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        usernameError: "Your username must be between 3 and 15 characters.",
-      }));
+      toast.error("Your username must be between 3 and 15 characters.");
       errorCount++;
-    } else {
-      if (formError.usernameError !== "") {
-        setFormError((prevFormError) => ({
-          ...prevFormError,
-          usernameError: "",
-        }));
-      }
     }
 
     // email //
     if (formData.email.length === 0) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        emailError: "Your email is required.",
-      }));
+      toast.error("Your email is required.");
       errorCount++;
     } else if (formData.email.length > 100) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        emailError: "Your email can not exceed 100 characters.",
-      }));
+      toast.error("Your email can not exceed 100 characters.");
       errorCount++;
-    } else {
-      if (formError.emailError !== "") {
-        setFormError((prevFormError) => ({
-          ...prevFormError,
-          emailError: "",
-        }));
-      }
     }
 
     // password //
     if (formData.password.length < 4 || formData.password.length > 20) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        passwordError: "Your password must be between 4 and 20 characters.",
-      }));
+      toast.error("Your password must be between 4 and 20 characters.");
       errorCount++;
-    } else {
-      if (formError.passwordError !== "") {
-        setFormError((prevFormError) => ({
-          ...prevFormError,
-          passwordError: "",
-        }));
-      }
     }
 
     // password confirmation //
     if (formData.passwordConfirmation.length === 0) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        passwordConfirmationError: "Your password confirmation is required.",
-      }));
+      toast.error("Your password confirmation is required.");
       errorCount++;
     } else if (formData.passwordConfirmation !== formData.password) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        passwordConfirmationError:
-          "Your password confirmation must match your password.",
-      }));
+      toast.error("Your password confirmation must match your password.");
       errorCount++;
-    } else {
-      if (formError.passwordConfirmationError !== "") {
-        setFormError((prevFormError) => ({
-          ...prevFormError,
-          passwordConfirmationError: "",
-        }));
-      }
     }
 
     // picture //
     if (formData.picture.length === 0) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        pictureError: "You must select an avatar.",
-      }));
+      toast.error("You must select an avatar.");
       errorCount++;
     } else if (formData.picture.length > 50) {
-      setFormError((prevFormError) => ({
-        ...prevFormError,
-        pictureError: "Error with image avatar link.",
-      }));
+      toast.error("Error with image avatar link.");
       errorCount++;
-    } else {
-      if (formError.pictureError !== "") {
-        setFormError((prevFormError) => ({
-          ...prevFormError,
-          pictureError: "",
-        }));
-      }
     }
 
     // validation result //
@@ -182,18 +111,31 @@ const Register = () => {
     // validate inputs //
     if (validateFormData()) {
       try {
-        // submit form data //
-        const data = {
+        const registerData = {
           username: formData.username,
           email: formData.email,
           password: formData.password,
           picture: formData.picture,
         };
+
+        // submit form data //
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/register",
-          data
+          registerData
         );
         console.log(response);
+
+        // set the context values //
+        setUser({
+          id: response.data.id,
+          username: response.data.username,
+          email: response.data.email,
+          picture: response.data.picture,
+          created_at: response.data.created_at,
+          updated_at: response.data.updated_at,
+          last_signed_in: response.data.last_signed_in,
+          status: true,
+        });
 
         // navigate to the home page //
         navigate("/");
@@ -209,7 +151,7 @@ const Register = () => {
           // axios error has a response
           if (axiosError.response) {
             const errorResponse = axiosError.response.data as ErrorResponse;
-            setRegisterError(errorResponse.message);
+            toast.error(errorResponse.message);
           }
           // axios error has a request
           else if (axiosError.request) {
@@ -241,16 +183,9 @@ const Register = () => {
       >
         <h1 className="text-center text-xl block mb-2 font-bold">Register</h1>
 
-        {registerError && (
-          <p className="text-center block mb-2 font-bold text-red-500">
-            {registerError}
-          </p>
-        )}
-
         <label htmlFor="username" className="block mb-2 font-bold">
           Username:
         </label>
-        <span className="text-red-500">{formError.usernameError}</span>
         <input
           id="username"
           type="text"
@@ -269,7 +204,6 @@ const Register = () => {
         <label htmlFor="email" className="block mb-2 font-bold">
           Email:
         </label>
-        <span className="text-red-500">{formError.emailError}</span>
         <input
           id="email"
           type="email"
@@ -288,7 +222,6 @@ const Register = () => {
         <label htmlFor="password" className="block mb-2 font-bold">
           Password:
         </label>
-        <span className="text-red-500">{formError.passwordError}</span>
         <input
           id="password"
           type="password"
@@ -307,9 +240,6 @@ const Register = () => {
         <label htmlFor="passwordConfirmation" className="block mb-2 font-bold">
           Password Confirmation:
         </label>
-        <span className="text-red-500">
-          {formError.passwordConfirmationError}
-        </span>
         <input
           id="passwordConfirmation"
           type="password"
@@ -327,7 +257,6 @@ const Register = () => {
 
         <div className="mb-4">
           <p className="block mb-2 font-bold">Select an Avatar:</p>
-          <span className="text-red-500">{formError.pictureError}</span>
           <div className="flex justify-center">
             <img
               className={`w-1/3 border-2 ${

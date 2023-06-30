@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Context //
 import { AuthContext } from "./helpers/AuthContext";
 // Pages & Components //
@@ -54,6 +56,7 @@ function App() {
       <AuthContext.Provider value={{ user, setUser }}>
         <Router>
           <Header />
+          <ToastContainer />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
