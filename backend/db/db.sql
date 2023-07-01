@@ -18,7 +18,7 @@ CREATE TABLE users(
     picture VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_signed_in TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_signed_in TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 -- using 'uuid PRIMARY KEY DEFAULT uuid_generate_v4()' instead of 'SERIAL PRIMARY KEY' because
 -- it creates a long string id containing alphabet and integers, instead of just an integer id

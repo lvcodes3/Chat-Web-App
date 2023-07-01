@@ -9,11 +9,18 @@ const PORT = process.env.PORT;
 // middlewares //
 const cors = require("cors");
 const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
+const helmet = require("helmet"); // allows app to use cookie-parser
+const cookieParser = require("cookie-parser"); // allows app to use cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(morgan("tiny"));
+app.use(helmet());
 app.use(cookieParser());
 
 // routes //
