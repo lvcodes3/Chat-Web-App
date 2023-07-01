@@ -1,6 +1,5 @@
 // Dependencies //
 import { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 // Context //
 import { AuthContext } from "../helpers/AuthContext";
@@ -9,33 +8,20 @@ interface ErrorResponse {
   message: string;
 }
 
-const Home = () => {
-  const location = useLocation();
-
+const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     const authenticateUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/users/auth",
+          "http://localhost:5000/api/v1/users/profile",
           {
             withCredentials: true,
           }
         );
-
-        // set the context values //
-        setUser({
-          id: response.data.id,
-          username: response.data.username,
-          email: response.data.email,
-          picture: response.data.picture,
-          created_at: response.data.created_at,
-          updated_at: response.data.updated_at,
-          last_signed_in: response.data.last_signed_in,
-          status: true,
-        });
-      } catch (err: unknown) {
+        console.log(response);
+      } catch (err) {
         // error is an Axios Error
         if (axios.isAxiosError(err)) {
           const axiosError = err as AxiosError<ErrorResponse>;
@@ -65,19 +51,9 @@ const Home = () => {
         }
       }
     };
-    if (location.pathname === "/") {
-      authenticateUser();
-    }
-  }, [location.pathname, setUser]);
+    authenticateUser();
+  }, []);
 
-  return (
-    <div>
-      {user.status ? (
-        <div>Home Page - User Authenticated</div>
-      ) : (
-        <div>Home Page - User Not Authenticated</div>
-      )}
-    </div>
-  );
+  return <div>Profile</div>;
 };
-export default Home;
+export default Profile;

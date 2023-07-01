@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import axios, { AxiosError } from "axios";
 // Context //
 import { AuthContext } from "../helpers/AuthContext";
+// React-Icons //
+import { FaSpinner } from "react-icons/fa";
 
 interface FormDataTypes {
   username: string;
@@ -12,6 +14,16 @@ interface FormDataTypes {
   password: string;
   passwordConfirmation: string;
   picture: string;
+}
+
+interface ImageLoadingTypes {
+  image1: boolean;
+  image2: boolean;
+  image3: boolean;
+}
+
+interface ErrorResponse {
+  message: string;
 }
 
 const Register = () => {
@@ -26,10 +38,13 @@ const Register = () => {
     passwordConfirmation: "",
     picture: "",
   });
+  const [imgsLoading, setImgsLoading] = useState<ImageLoadingTypes>({
+    image1: true,
+    image2: true,
+    image3: true,
+  });
   const [avatarLinks, setAvatarLinks] = useState<string[]>([]);
-  const [selectedAvatarIdx, setSelectedAvatarIdx] = useState<
-    number | undefined
-  >(undefined);
+  const [selectedAvatarIdx, setSelectedAvatarIdx] = useState<number>(-1);
 
   useEffect(() => {
     generateRandomAvatarLinks();
@@ -121,9 +136,9 @@ const Register = () => {
         // submit form data //
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/register",
-          registerData
+          registerData,
+          { withCredentials: true }
         );
-        console.log(response);
 
         // set the context values //
         setUser({
@@ -134,16 +149,12 @@ const Register = () => {
           created_at: response.data.created_at,
           updated_at: response.data.updated_at,
           last_signed_in: response.data.last_signed_in,
-          status: true,
+          status: false,
         });
 
         // navigate to the home page //
         navigate("/");
       } catch (err: unknown) {
-        type ErrorResponse = {
-          message: string;
-        };
-
         // Axios Error
         if (axios.isAxiosError(err)) {
           const axiosError = err as AxiosError<ErrorResponse>;
@@ -258,12 +269,45 @@ const Register = () => {
         <div className="mb-4">
           <p className="block mb-2 font-bold">Select an Avatar:</p>
           <div className="flex justify-center">
+            {/* First Image */}
+            {imgsLoading.image1 && (
+              <div className="w-1/3 flex justify-center items-center m-1">
+                <FaSpinner
+                  style={{
+                    fontSize: "2rem",
+                    animation: "spin 1.5s linear infinite",
+                  }}
+                />
+                <style>
+                  {`
+                    @keyframes spin {
+                      0% {
+                        transform: rotate(0deg);
+                      }
+                      100% {
+                        transform: rotate(360deg);
+                      }
+                    }
+                  `}
+                </style>
+              </div>
+            )}
             <img
               className={`w-1/3 border-2 ${
-                selectedAvatarIdx === 0 ? "border-green-500" : "border-black"
+                selectedAvatarIdx === 0
+                  ? "border-green-500"
+                  : imgsLoading.image1
+                  ? "hidden"
+                  : "border-black"
               } rounded-md cursor-pointer m-1`}
               src={avatarLinks[0]}
               alt="Avatar Option 1"
+              onLoad={() => {
+                setImgsLoading((prevImgsLoading) => ({
+                  ...prevImgsLoading,
+                  image1: false,
+                }));
+              }}
               onClick={() => {
                 setSelectedAvatarIdx(0);
                 setFormData((prevFormData) => ({
@@ -272,12 +316,46 @@ const Register = () => {
                 }));
               }}
             />
+
+            {/* Second Image */}
+            {imgsLoading.image2 && (
+              <div className="w-1/3 flex justify-center items-center m-1">
+                <FaSpinner
+                  style={{
+                    fontSize: "2rem",
+                    animation: "spin 1.5s linear infinite",
+                  }}
+                />
+                <style>
+                  {`
+                    @keyframes spin {
+                      0% {
+                        transform: rotate(0deg);
+                      }
+                      100% {
+                        transform: rotate(360deg);
+                      }
+                    }
+                  `}
+                </style>
+              </div>
+            )}
             <img
               className={`w-1/3 border-2 ${
-                selectedAvatarIdx === 1 ? "border-green-500" : "border-black"
+                selectedAvatarIdx === 1
+                  ? "border-green-500"
+                  : imgsLoading.image2
+                  ? "hidden"
+                  : "border-black"
               } rounded-md cursor-pointer m-1`}
               src={avatarLinks[1]}
               alt="Avatar Option 2"
+              onLoad={() => {
+                setImgsLoading((prevImgsLoading) => ({
+                  ...prevImgsLoading,
+                  image2: false,
+                }));
+              }}
               onClick={() => {
                 setSelectedAvatarIdx(1);
                 setFormData((prevFormData) => ({
@@ -286,12 +364,46 @@ const Register = () => {
                 }));
               }}
             />
+
+            {/* Third Image */}
+            {imgsLoading.image3 && (
+              <div className="w-1/3 flex justify-center items-center m-1">
+                <FaSpinner
+                  style={{
+                    fontSize: "2rem",
+                    animation: "spin 1.5s linear infinite",
+                  }}
+                />
+                <style>
+                  {`
+                    @keyframes spin {
+                      0% {
+                        transform: rotate(0deg);
+                      }
+                      100% {
+                        transform: rotate(360deg);
+                      }
+                    }
+                  `}
+                </style>
+              </div>
+            )}
             <img
               className={`w-1/3 border-2 ${
-                selectedAvatarIdx === 2 ? "border-green-500" : "border-black"
+                selectedAvatarIdx === 2
+                  ? "border-green-500"
+                  : imgsLoading.image3
+                  ? "hidden"
+                  : "border-black"
               } rounded-md cursor-pointer m-1`}
               src={avatarLinks[2]}
               alt="Avatar Option 3"
+              onLoad={() => {
+                setImgsLoading((prevImgsLoading) => ({
+                  ...prevImgsLoading,
+                  image3: false,
+                }));
+              }}
               onClick={() => {
                 setSelectedAvatarIdx(2);
                 setFormData((prevFormData) => ({

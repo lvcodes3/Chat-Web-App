@@ -1,7 +1,6 @@
 // Dependencies //
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Context //
@@ -11,6 +10,8 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 interface User {
   id: string;
@@ -37,20 +38,6 @@ const initialUser: User = {
 function App() {
   const [user, setUser] = useState<User>(initialUser);
 
-  useEffect(() => {
-    const validateJWT = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/v1/users/auth"
-        );
-        console.log(response);
-      } catch (err: unknown) {
-        console.log(err);
-      }
-    };
-    validateJWT();
-  }, []);
-
   return (
     <>
       <AuthContext.Provider value={{ user, setUser }}>
@@ -61,6 +48,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
