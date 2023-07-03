@@ -33,7 +33,7 @@ const Header = () => {
         status: false,
       });
 
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       // error is an Axios Error
       if (axios.isAxiosError(err)) {
@@ -87,7 +87,7 @@ const Header = () => {
             className="flex items-center bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 mx-5 rounded"
             onClick={logout}
           >
-            Logout
+            Log Out
             <FaPowerOff className="ml-1" />
           </button>
         </div>
@@ -97,7 +97,7 @@ const Header = () => {
             to="/login"
             className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 mx-5 rounded-md text-sm font-medium"
           >
-            Login
+            Log In
           </Link>
           <Link
             to="/register"

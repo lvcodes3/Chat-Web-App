@@ -4,6 +4,9 @@ import { useLocation } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 // Context //
 import { AuthContext } from "../helpers/AuthContext";
+// Components //
+import AuthLanding from "../components/AuthLanding";
+import UnauthLanding from "../components/UnauthLanding";
 
 interface ErrorResponse {
   message: string;
@@ -44,6 +47,18 @@ const Home = () => {
           if (axiosError.response) {
             const errorResponse = axiosError.response.data as ErrorResponse;
             console.log(errorResponse.message);
+
+            // set the default context values //
+            setUser({
+              id: "",
+              username: "",
+              email: "",
+              picture: "",
+              created_at: "",
+              updated_at: "",
+              last_signed_in: "",
+              status: false,
+            });
           }
           // axios error has a request
           else if (axiosError.request) {
@@ -70,14 +85,6 @@ const Home = () => {
     }
   }, [location.pathname, setUser]);
 
-  return (
-    <div>
-      {user.status ? (
-        <div>Home Page - User Authenticated</div>
-      ) : (
-        <div>Home Page - User Not Authenticated</div>
-      )}
-    </div>
-  );
+  return <div>{user.status ? <AuthLanding /> : <UnauthLanding />}</div>;
 };
 export default Home;
