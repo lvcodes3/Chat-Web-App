@@ -28,6 +28,8 @@ const userRoutes = require("./routes/userRoutes.js");
 app.use("/api/v1/users", userRoutes);
 const messageRoutes = require("./routes/messageRoutes.js");
 app.use("/api/v1/messages", messageRoutes);
+const friendRoutes = require("./routes/friendRoutes.js");
+app.use("/api/v1/friends", friendRoutes);
 
 // error middlewares //
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware.js");

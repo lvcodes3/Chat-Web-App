@@ -26,6 +26,9 @@ const updateUserPassword = `UPDATE users
   WHERE id = $2
   RETURNING id, username, email, picture, created_at, updated_at, last_signed_in;`;
 
+const getAllUsers = `SELECT id, username, email, picture, created_at, updated_at, last_signed_in
+  FROM users WHERE id != $1;`;
+
 module.exports = {
   getUserById,
   getUserByUsername,
@@ -34,4 +37,5 @@ module.exports = {
   registerUser,
   loginUser,
   updateUserPassword,
+  getAllUsers,
 };

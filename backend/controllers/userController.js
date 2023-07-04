@@ -188,6 +188,18 @@ const updateUserPassword = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Get All Users Except Self
+// @route   GET http://localhost:5000/api/v1/users
+// @access  Private
+const getAllUsers = asyncHandler(async (req, res) => {
+  // access to req.user //
+  const allUsersResponse = await db.query(userQueries.getAllUsers, [
+    req.user.id,
+  ]);
+  const allUsers = allUsersResponse.rows;
+  res.status(200).json(allUsers);
+});
+
 module.exports = {
   authUser,
   registerUser,
@@ -195,4 +207,5 @@ module.exports = {
   logoutUser,
   getUserProfile,
   updateUserPassword,
+  getAllUsers,
 };

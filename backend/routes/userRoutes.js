@@ -17,5 +17,6 @@ router.post("/logout", userController.logoutUser);
 router.get("/auth", protect, userController.authUser);
 router.get("/profile", protect, userController.getUserProfile);
 router.put("/update", protect, userController.updateUserPassword);
+router.get("/", protect, userController.getAllUsers);
 
 module.exports = router;

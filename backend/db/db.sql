@@ -32,3 +32,17 @@ CREATE TABLE messages(
     receiver UUID NOT NULL REFERENCES users(id),
     sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 5. Create friends Table --
+CREATE TABLE friends(
+    id SERIAL NOT NULL PRIMARY KEY,
+    sender UUID NOT NULL REFERENCES users(id),
+    receiver UUID NOT NULL REFERENCES users(id),
+    status VARCHAR(15) NOT NULL,
+    friend_at TIMESTAMP
+);
+-- sender will be the friend request sender --
+-- receiver will be the friend request receiver --
+-- status can be: pending, accepted, or declined --
+-- friend_at will be a timestamp that will be set once the friend request is accepted
+-- by receiver
