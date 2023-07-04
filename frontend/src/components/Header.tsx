@@ -65,14 +65,31 @@ const Header = () => {
 
   return (
     <nav className="h-16 bg-black flex justify-between">
-      <div className="flex items-center">
-        <Link
-          to="/"
-          className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 mx-5 rounded-md text-sm font-medium"
-        >
-          Chat Web App
-        </Link>
-      </div>
+      {user.status ? (
+        <div className="flex items-center">
+          <Link
+            to="/"
+            className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 mx-5 rounded-md text-sm font-medium"
+          >
+            Chat Web App
+          </Link>
+          <Link
+            to="/users"
+            className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 mx-5 rounded-md text-sm font-medium"
+          >
+            Users
+          </Link>
+        </div>
+      ) : (
+        <div className="flex items-center">
+          <Link
+            to="/"
+            className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 mx-5 rounded-md text-sm font-medium"
+          >
+            Chat Web App
+          </Link>
+        </div>
+      )}
 
       {user.status ? (
         <div className="flex items-center">

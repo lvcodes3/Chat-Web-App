@@ -8,6 +8,7 @@ import { AuthContext } from "./helpers/AuthContext";
 // Pages & Components //
 import Header from "./components/Header";
 import Home from "./pages/Home";
+import Users from "./pages/Users";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -46,6 +47,7 @@ function App() {
           <ToastContainer />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/users" element={<Users />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />

@@ -1,12 +1,6 @@
-// Images //
-import bgImage from "../assets/bg.jpg";
-
-const Landing = () => {
+const HomeUnauthLanding = () => {
   return (
-    <div
-      className="py-5 bg-cover bg-center bg-no-repeat h-screen"
-      style={{ backgroundImage: `url(${bgImage})` }}
-    >
+    <div>
       <h1 className="text-center text-2xl font-bold mb-5">
         Welcome to the Chat Web App!
       </h1>
@@ -25,4 +19,4 @@ const Landing = () => {
     </div>
   );
 };
-export default Landing;
+export default HomeUnauthLanding;

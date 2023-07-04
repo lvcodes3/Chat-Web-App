@@ -5,8 +5,10 @@ import axios, { AxiosError } from "axios";
 // Context //
 import { AuthContext } from "../helpers/AuthContext";
 // Components //
-import AuthLanding from "../components/AuthLanding";
-import UnauthLanding from "../components/UnauthLanding";
+import HomeAuthLanding from "../components/HomeAuthLanding";
+import HomeUnauthLanding from "../components/HomeUnauthLanding";
+// Images //
+import bgImage from "../assets/bg.jpg";
 
 interface ErrorResponse {
   message: string;
@@ -26,6 +28,8 @@ const Home = () => {
             withCredentials: true,
           }
         );
+        console.log("sending api request");
+        console.log(response);
 
         // set the context values //
         setUser({
@@ -39,6 +43,8 @@ const Home = () => {
           status: true,
         });
       } catch (err: unknown) {
+        console.log("receiving api error");
+
         // error is an Axios Error
         if (axios.isAxiosError(err)) {
           const axiosError = err as AxiosError<ErrorResponse>;
@@ -80,11 +86,16 @@ const Home = () => {
         }
       }
     };
-    if (location.pathname === "/") {
-      authenticateUser();
-    }
-  }, [location.pathname, setUser]);
+    authenticateUser();
+  }, [setUser]);
 
-  return <div>{user.status ? <AuthLanding /> : <UnauthLanding />}</div>;
+  return (
+    <div
+      className="py-5 bg-cover bg-center bg-no-repeat h-screen"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      {user.status ? <HomeAuthLanding /> : <HomeUnauthLanding />}
+    </div>
+  );
 };
 export default Home;
